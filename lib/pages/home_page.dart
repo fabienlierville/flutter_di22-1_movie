@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:movie/models/movie.dart';
+import 'package:movie/models/movie_info.dart';
 import 'package:movie/repositories/movie_repository.dart';
 import 'package:movie/services/api_movie_service.dart';
 
@@ -22,12 +23,19 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> getPopular() async {
-    List<Movie>? movies =
-        await MovieRepository(apiMovieService: ApiMovieService(page: 1))
-            .getPopular();
-    movies?.forEach((movie) {
+    MovieInfo movieInfo = await MovieRepository(apiMovieService: ApiMovieService(page: 1))
+        .getPopular();
 
-      print(movie.title);
-    });
+    if(movieInfo.statusCode == 200){
+      //Setstate qui refresh la liste des movies
+      movieInfo.movies.forEach((movie) {
+        print(movie.title);
+      });
+    }else{
+      // faire un setstate pour afficher un
+      // Widet d'erreur en rouge
+      print(movieInfo.message);
+    }
+
   }
 }
